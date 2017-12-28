@@ -1,10 +1,11 @@
 package com.ismaiel.easysheet.services;
 
 import com.ismaiel.easysheet.GC;
-import com.ismaiel.easysheet.controllers.models.Report;
-import com.ismaiel.easysheet.controllers.models.SheetItem;
+import com.ismaiel.easysheet.models.Report;
+import com.ismaiel.easysheet.models.SheetItem;
 import com.ismaiel.easysheet.entities.Member;
 import com.ismaiel.easysheet.entities.Sheet;
+import com.ismaiel.easysheet.exceptions.BadOperationException;
 import com.ismaiel.easysheet.repositories.EntryRepo;
 import com.ismaiel.easysheet.repositories.MemberRepo;
 import com.ismaiel.easysheet.repositories.SheetRepo;
@@ -70,10 +71,26 @@ public class SheetServices {
         }
     }
 
+     /**
+     * Register new Sheet
+     *
+     * @param Sheet which must has:
+     * 1- name mandatory
+     * 2- desc 
+     * 3- password mandatory
+     * 4- adnimPassword mandaroty
+     * 
+     * @return when okay:  Sheet with id ;
+     * else 
+     *  code 500 if unknown error;
+     *  code 400 when mandatory input is missing;
+     */
     public ResponseEntity newSheet(Sheet sheet) {
         try {
+            if (sheet.getPassword()==null || sheet.getName()==null || sheet.getAdminPassword()==null)
+                return ResponseEntity.badRequest().body("001");
             sheet.setDate(new Date());
-            sheet.setMembers(new ArrayList<Member>());
+            sheet.setMembers(new ArrayList<>());
             Sheet save = sheetRepo.save(sheet);
             return ResponseEntity.ok(save);
         } catch (Exception e) {

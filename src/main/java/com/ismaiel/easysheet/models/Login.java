@@ -1,5 +1,5 @@
 
-package com.ismaiel.easysheet.controllers.models;
+package com.ismaiel.easysheet.models;
 
 
 public class Login

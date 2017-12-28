@@ -1,8 +1,8 @@
 package com.ismaiel.easysheet.controllers;
 
 
-import com.ismaiel.easysheet.controllers.models.Login;
-import com.ismaiel.easysheet.controllers.models.SheetItem;
+import com.ismaiel.easysheet.models.Login;
+import com.ismaiel.easysheet.models.SheetItem;
 import com.ismaiel.easysheet.entities.Sheet;
 import com.ismaiel.easysheet.services.SheetServices;
 import java.util.ArrayList;
@@ -41,12 +41,13 @@ public class SheetController {
     }
 
 
-    @PostMapping(value = "/login")
+    @PostMapping(value = "/signin")
     public ResponseEntity login(@RequestBody Login infoLogin) {
         return sheetServices.login(infoLogin.getId(),infoLogin.getPassword());  
     }
     
-    @PostMapping(value = "/create")
+   
+    @PostMapping(value = "/signup")
     public ResponseEntity create(@RequestBody Sheet sheet) {
         return sheetServices.newSheet(sheet);  
     }

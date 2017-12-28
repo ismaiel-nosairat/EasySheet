@@ -8,4 +8,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class BadOperationException extends RuntimeException
 {
 
+    public BadOperationException() {
+    }
+    public BadOperationException(String msg){
+    super(msg);
+    }
+    
 }
