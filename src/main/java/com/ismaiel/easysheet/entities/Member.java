@@ -27,12 +27,13 @@ public class Member
     private long id;
     private String name;
     
-    @JsonBackReference
+    @JsonBackReference(value = "sheet-member")
     @ManyToOne
     @JoinColumn(name = "sheet_id",referencedColumnName = "id")
     private Sheet sheet;
     
-    @JsonManagedReference
+    @JsonBackReference(value = "a_name")
+    //@JsonManagedReference
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Share> shares;
     

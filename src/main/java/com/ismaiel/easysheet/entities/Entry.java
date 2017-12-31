@@ -17,7 +17,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-@JsonIgnoreProperties(value={"shares"},allowSetters = true,allowGetters = false)
+//@JsonIgnoreProperties(value={"shares"},allowSetters = true,allowGetters = false)
 @Entity
 public class Entry {
 
@@ -36,7 +36,7 @@ public class Entry {
     @OneToMany(mappedBy = "entry", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Share> shares;
     
-    @JsonBackReference
+    @JsonBackReference(value="entry-sheet")
     @ManyToOne
     @JoinColumn(name = "sheet_id",referencedColumnName = "id")
     private Sheet sheet;

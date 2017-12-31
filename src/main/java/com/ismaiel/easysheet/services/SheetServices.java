@@ -6,6 +6,10 @@ import com.ismaiel.easysheet.models.SheetItem;
 import com.ismaiel.easysheet.entities.Member;
 import com.ismaiel.easysheet.entities.Sheet;
 import com.ismaiel.easysheet.exceptions.BadOperationException;
+import com.ismaiel.easysheet.exceptions.InternalServerException;
+import com.ismaiel.easysheet.exceptions.NotFoundException;
+import com.ismaiel.easysheet.exceptions.UnAuthorizedException;
+import com.ismaiel.easysheet.models.SheetUpdateInfo;
 import com.ismaiel.easysheet.repositories.EntryRepo;
 import com.ismaiel.easysheet.repositories.MemberRepo;
 import com.ismaiel.easysheet.repositories.SheetRepo;
@@ -33,6 +37,9 @@ public class SheetServices {
     MemberRepo memberRepo;
     @Autowired
     EntryRepo entryRepo;
+    
+    @Autowired
+    Tools tools;
 
     @Autowired
     EntityManager em;
@@ -59,15 +66,11 @@ public class SheetServices {
 
         Sheet sheet = sheetRepo.findOne(id);
         if (sheet == null) {
-            return ResponseEntity.notFound().build();
-        } else if (password.equals(sheet.getAdminPassword()) || password.equals(sheet.getPassword())) {
-//            for (Member ob : sheet.getMembers()) {
-//                System.out.println(ob.getName());
-//            }
-
+            throw new NotFoundException("003",null);
+        } else if (password.equals(sheet.getPassword()) || password.equals(sheet.getViewPassword())) {
             return ResponseEntity.ok(sheet);
         } else {
-            return ResponseEntity.status(401).build();
+            throw new UnAuthorizedException("001",null);
         }
     }
 
@@ -76,25 +79,24 @@ public class SheetServices {
      *
      * @param Sheet which must has:
      * 1- name mandatory
-     * 2- desc 
-     * 3- password mandatory
-     * 4- adnimPassword mandaroty
+     * 3- adminPassword mandatory
      * 
-     * @return when okay:  Sheet with id ;
+     * @return when 200:  Sheet with extra( id and password );
      * else 
      *  code 500 if unknown error;
      *  code 400 when mandatory input is missing;
      */
     public ResponseEntity newSheet(Sheet sheet) {
         try {
-            if (sheet.getPassword()==null || sheet.getName()==null || sheet.getAdminPassword()==null)
-                return ResponseEntity.badRequest().body("001");
+            if (sheet.getPassword()==null || sheet.getName()==null ||sheet.getPassword()=="" || sheet.getName()==""  )
+                return ResponseEntity.badRequest().body("004");
             sheet.setDate(new Date());
+            sheet.setViewPassword(tools.generatePasswor(sheet.getPassword()));
             sheet.setMembers(new ArrayList<>());
             Sheet save = sheetRepo.save(sheet);
             return ResponseEntity.ok(save);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(e.getMessage());
+            throw new InternalServerException("005",e);
         }
     }
 
@@ -102,13 +104,13 @@ public class SheetServices {
         try {
             Sheet sh = sheetRepo.findOne(id);
             if (sh == null) {
-                return ResponseEntity.notFound().build();
+                throw new NotFoundException("003",null);
             }
             sheetRepo.delete(id);
             return ResponseEntity.ok(null);
         } catch (Exception e) {
             e.printStackTrace(System.err);
-            return ResponseEntity.status(500).body(e.getMessage());
+            throw new InternalServerException("005",e);
         }
     }
 
@@ -116,7 +118,7 @@ public class SheetServices {
         try {
             Sheet sh = sheetRepo.findOne(id);
             if (sh == null) {
-                return ResponseEntity.notFound().build();
+                throw new NotFoundException("003",null);
             }
 
             entryRepo.deleteBySheetId(id);
@@ -124,15 +126,14 @@ public class SheetServices {
 
             return ResponseEntity.ok(null);
         } catch (Exception e) {
-            e.printStackTrace(System.err);
-            return ResponseEntity.status(500).body(e.getMessage());
+            throw new InternalServerException("005",e);
         }
     }
 
     public ResponseEntity report(Sheet sheet) {
         Sheet sh = sheetRepo.findOne(sheet.getId());
         if (sh == null) {
-            return ResponseEntity.notFound().build();
+            throw new NotFoundException("003",null);
         }
         Report report = new Report();
         String x = GC.reportBalanceQuery;
@@ -156,6 +157,22 @@ public class SheetServices {
         report.total=items.get(0);
         return ResponseEntity.ok(report);
 
+    }
+
+    public ResponseEntity<?> updateInfo(SheetUpdateInfo info) {
+      Sheet original = sheetRepo.findOne(info.getId());
+        if (original == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            // Check permission
+            if (! original.getPassword().equals(info.getPassword()))
+                throw new UnAuthorizedException("001",null);
+            original.setPassword(info.getNewPassword());
+            original.setViewPassword(info.getNewViewPassword());
+            sheetRepo.save(original);
+            return ResponseEntity.ok(original);
+
+        }
     }
 
 }

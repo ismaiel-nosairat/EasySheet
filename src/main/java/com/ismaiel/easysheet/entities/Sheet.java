@@ -11,6 +11,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 @JsonIgnoreProperties({"members"})
 @Entity
 public class Sheet {
@@ -18,10 +20,16 @@ public class Sheet {
     @Id
     @GeneratedValue
     private long id;
+    @NotNull
+    @Size(min = 2, max = 34)
     private String name;
     private Date date;
-    private String adminPassword;
+    @NotNull
+    @Size(min = 2, max = 34)
     private String password;
+    @NotNull
+    @Size(min = 2, max = 34)
+    private String viewPassword;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "sheet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -30,8 +38,8 @@ public class Sheet {
     public Sheet(String name, Date date, String adminPassword, String password) {
         this.name = name;
         this.date = date;
-        this.adminPassword = adminPassword;
-        this.password = password;
+        this.password = adminPassword;
+        this.viewPassword = password;
         this.members = new ArrayList<>();
     }
 
@@ -62,24 +70,24 @@ public class Sheet {
         this.date = date;
     }
 
-    public void setAdminPassword(String adminPassword) {
-        this.adminPassword = adminPassword;
-    }
-
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setViewPassword(String viewPassword) {
+        this.viewPassword = viewPassword;
     }
 
     public void setMembers(List<Member> members) {
         this.members = members;
     }
 
-    public String getAdminPassword() {
-        return adminPassword;
-    }
-
     public String getPassword() {
         return password;
+    }
+
+    public String getViewPassword() {
+        return viewPassword;
     }
 
     public List<Member> getMembers() {

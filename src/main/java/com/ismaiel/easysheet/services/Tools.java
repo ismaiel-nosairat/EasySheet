@@ -13,7 +13,7 @@ public class Tools {
     void checkDuplicated(Sheet sheet, Member member) {
         for (Member ob : sheet.getMembers()) {
             if (ob.getName().equalsIgnoreCase(member.getName())) {
-                throw new DuplicatedException();
+                throw new DuplicatedException("002",null);
             }
         }
     }
@@ -23,27 +23,32 @@ public class Tools {
 
     @Deprecated
     void chechPermission(Sheet sheet, Member member) {
-        if (!sheet.getAdminPassword().equalsIgnoreCase(member.getSheet().getAdminPassword())) {
-            throw new UnAuthorizedException();
+        if (!sheet.getPassword().equalsIgnoreCase(member.getSheet().getPassword())) {
+            throw new UnAuthorizedException("",null);
         }
     }
 
     void checkPermission(Sheet sheet, Sheet original) {
-        if ( sheet.getAdminPassword()!=null  &&   sheet.getAdminPassword().equalsIgnoreCase(original.getAdminPassword())) {
+        if ( sheet.getPassword()!=null  &&   sheet.getPassword().equals(original.getPassword())) {
         } else {
-            if (sheet.getPassword()!=null  &&  sheet.getPassword().equalsIgnoreCase(original.getPassword())) {
+            if (sheet.getViewPassword()!=null  &&  sheet.getViewPassword().equals(original.getViewPassword())) {
             } else {
-                throw new UnAuthorizedException();
+                throw new UnAuthorizedException("001",null);
             }
         }
     }
 
     void checkAdminPermission(Sheet sheet, Sheet original) {
-        if (sheet.getAdminPassword()!=null  && sheet.getAdminPassword().equalsIgnoreCase(original.getAdminPassword())) {
+        if (sheet.getPassword()!=null  && sheet.getPassword().equals(original.getPassword())) {
 
         } else {
-            throw new UnAuthorizedException();
+            throw new UnAuthorizedException("001",null);
         }
+    }
+    
+    String generatePasswor(String adminPassword) {
+        return adminPassword.toUpperCase();
+               
     }
 
 }

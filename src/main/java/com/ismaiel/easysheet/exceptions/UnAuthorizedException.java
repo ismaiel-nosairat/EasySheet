@@ -8,4 +8,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class UnAuthorizedException extends RuntimeException
 {
 
+    public UnAuthorizedException(String x,Exception e) {
+        super (x);
+    }
+
 }

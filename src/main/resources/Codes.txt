@@ -1,0 +1,8 @@
+001: permission denied 
+002: duplicated member
+003: sheet is not found
+004: mandatory input is missing
+005: runtime error
+006: member is not found
+007: member has shares and can't be deleted
+008: can't add entry with no members

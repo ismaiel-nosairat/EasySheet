@@ -3,6 +3,7 @@ package com.ismaiel.easysheet.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -17,9 +18,15 @@ public class Share
     @Id @GeneratedValue
     private long id;
     
+    //remeved cause i need member of share ,not vice
+    //@JsonBackReference
     
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
+    //Removed cause we want member of each share
+    //@ManyToOne(fetch = FetchType.LAZY)
+    
+    //removed case it cause 415 response
+    //@JsonManagedReference(value = "a_name")
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="member_id")
     private Member member;
     

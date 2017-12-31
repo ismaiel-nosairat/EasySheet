@@ -10,7 +10,7 @@ public class BadOperationException extends RuntimeException
 
     public BadOperationException() {
     }
-    public BadOperationException(String msg){
+    public BadOperationException(String msg,Exception e){
     super(msg);
     }
     
