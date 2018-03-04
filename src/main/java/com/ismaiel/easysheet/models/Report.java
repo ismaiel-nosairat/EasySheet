@@ -13,17 +13,19 @@ public class Report
     public List<String> members;
     public List<Double> balances;
     public Double total;
+    public boolean isThereData;
 
     public Report() {
         members=new ArrayList<>();
         balances=new ArrayList<>();
     }
 
-    public Report(long id, List<String> members, List<Double> balances, Double total) {
+    public Report(long id, List<String> members, List<Double> balances, Double total,boolean isThereData) {
         this.id = id;
         this.members = members;
         this.balances = balances;
         this.total = total;
+        this.isThereData=isThereData;
     }
     
     

@@ -2,7 +2,9 @@ package com.ismaiel.easysheet.services;
 
 import com.ismaiel.easysheet.entities.Entry;
 import com.ismaiel.easysheet.entities.Member;
+import com.ismaiel.easysheet.entities.Share;
 import com.ismaiel.easysheet.entities.Sheet;
+import com.ismaiel.easysheet.exceptions.BadOperationException;
 import com.ismaiel.easysheet.exceptions.DuplicatedException;
 import com.ismaiel.easysheet.exceptions.UnAuthorizedException;
 import org.springframework.stereotype.Service;
@@ -51,4 +53,24 @@ public class Tools {
                
     }
 
+    void checkIntegrity(Entry entry) {
+        double total=0;
+        for(Share s:entry.getShares()){
+            total+=s.getAmount();
+        }
+        if ( Math.abs(total) > 0.002){
+            //System.out.println("------"+Math.abs(total));
+            throw new BadOperationException("012", null);
+        }
+        if (entry.getShares().size()<2){
+             throw new BadOperationException("013", null);
+        }
+//        if (entry.getShares().size()==2){
+//            if (entry.getShares().get(0).getMember().getId()==entry.getShares().get(1).getMember().getId()  )
+//             throw new BadOperationException("014", null);
+//        }
+        
+    }
+
 }
+

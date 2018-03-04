@@ -21,14 +21,14 @@ public class Sheet {
     @GeneratedValue
     private long id;
     @NotNull
-    @Size(min = 2, max = 34)
+    @Size(min = 1, max = 50)
     private String name;
     private Date date;
     @NotNull
-    @Size(min = 2, max = 34)
+    @Size(min = 3, max = 50)
     private String password;
     @NotNull
-    @Size(min = 2, max = 34)
+    @Size(min = 3, max = 50)
     private String viewPassword;
 
     @JsonManagedReference

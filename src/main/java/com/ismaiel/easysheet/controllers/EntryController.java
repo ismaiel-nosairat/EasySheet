@@ -38,7 +38,7 @@ public class EntryController
     @PostMapping("/add")
     public ResponseEntity addEntry(@RequestBody Entry entry)
     {
-        return entryServices.addEntry(entry);
+        return ResponseEntity.ok(entryServices.addEntry(entry));
     }
     
     @PostMapping("/delete")

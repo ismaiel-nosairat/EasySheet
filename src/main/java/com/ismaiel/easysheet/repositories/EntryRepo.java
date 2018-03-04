@@ -21,5 +21,8 @@ public interface EntryRepo extends JpaRepository<Entry, Long> {
     Long deleteBySheetId(long id);
 
     public List<Entry> findByCreditor(Member member);
+    
 
+
+    
 }

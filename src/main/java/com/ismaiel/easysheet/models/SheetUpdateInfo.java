@@ -12,7 +12,6 @@ package com.ismaiel.easysheet.models;
 public class SheetUpdateInfo {
     private long id;
     private String password;
-    private String viewPassword;
     
     private String newPassword;
     private String newViewPassword;
@@ -20,10 +19,9 @@ public class SheetUpdateInfo {
     public SheetUpdateInfo() {
     }
 
-    public SheetUpdateInfo(long id, String password, String viewPassword, String newPassword, String newViewPassword) {
+    public SheetUpdateInfo(long id, String password, String newPassword, String newViewPassword) {
         this.id = id;
         this.password = password;
-        this.viewPassword = viewPassword;
         this.newPassword = newPassword;
         this.newViewPassword = newViewPassword;
     }
@@ -42,14 +40,6 @@ public class SheetUpdateInfo {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getViewPassword() {
-        return viewPassword;
-    }
-
-    public void setViewPassword(String viewPassword) {
-        this.viewPassword = viewPassword;
     }
 
     public String getNewPassword() {

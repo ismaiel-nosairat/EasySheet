@@ -15,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 
 @JsonIgnoreProperties({"shares"})
@@ -25,6 +27,8 @@ public class Member
     @Id
     @GeneratedValue
     private long id;
+    @NotNull
+    @Size(min=1,max=50)
     private String name;
     
     @JsonBackReference(value = "sheet-member")

@@ -6,3 +6,9 @@
 006: member is not found
 007: member has shares and can't be deleted
 008: can't add entry with no members
+009: entry is not found
+010: member is not valid
+011: member name is null or less than 3 chars
+012: sum of share amount is not equal to entry amount
+013: there are less than 2 shares
+014: creditor and debtor  are same

@@ -16,6 +16,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 //@JsonIgnoreProperties(value={"shares"},allowSetters = true,allowGetters = false)
 @Entity
@@ -24,8 +26,11 @@ public class Entry {
     @Id
     @GeneratedValue
     private long id;
+    @NotNull
     private double amount;
     private Date date;
+    @NotNull
+    @Size(min=1,max=50)
     private String name;
 
     @ManyToOne
@@ -33,7 +38,7 @@ public class Entry {
     private Member creditor;
 
     @JsonManagedReference(value="entry-share")
-    @OneToMany(mappedBy = "entry", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "entry", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Share> shares;
     
     @JsonBackReference(value="entry-sheet")

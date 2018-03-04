@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 
 @Entity
@@ -35,6 +37,7 @@ public class Share
     @JoinColumn(name="entry_id")
     private Entry entry;
     
+    @NotNull
     private double amount;
 
     public Share() {

@@ -44,39 +44,31 @@ public class EntryServices {
             return ResponseEntity.ok(entryRepo.findBySheet(sheet));
         }
     }
+    
+    public Entry getEntry(Entry entry) {
 
-    public ResponseEntity addEntry(Entry entry) {
-        if (entry.getShares().size() < 1) {
-            throw new BadOperationException("008",null);
+        Sheet sheet = sheetRepo.findOne(entry.getSheet().getId());
+        if (sheet == null) {
+            throw new NotFoundException("003",null);
+        } else {
+            tools.checkPermission(sheet, entry.getSheet());
+            
+            Entry out =entryRepo.findOne(entry.getId());
+            
+            return (out);
         }
+    }
+    
+
+    public ResponseEntity deleteEntry(Entry entry) {
         Sheet sheet = sheetRepo.findOne(entry.getSheet().getId());
         if (sheet == null) {
             throw new NotFoundException("003",null);
         } else {
             tools.checkAdminPermission(sheet, entry.getSheet());
-            entry.setDate(new Date());
-            entry.setSheet(sheet);
-            entryRepo.save(entry);
-//            for (Share sh : entry.getShares()) {
-//                Member m = memberRepo.findOne(sh.getMember().getId());
-//                if (m == null) {
-//                    throw new BadOperationException();
-//                }
-//                shareRepo.save(new Share(m, entry, sh.getAmount()));
-//            }
-            return ResponseEntity.ok(entry);
-        }
-    }
-
-    public ResponseEntity deleteEntry(Entry entry) {
-        Sheet sheet = sheetRepo.findOne(entry.getSheet().getId());
-        if (sheet == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            tools.checkAdminPermission(sheet, entry.getSheet());
             entry = entryRepo.findOne(entry.getId());
             if (entry == null) {
-                return ResponseEntity.notFound().build();
+                throw new NotFoundException("009",null);
             }
             entryRepo.delete(entry.getId());
             return ResponseEntity.ok(entry);
@@ -87,5 +79,33 @@ public class EntryServices {
         Entry entry = entryRepo.findOne(1L);
         return ResponseEntity.ok(entry);
     }
+    
+    
+    
+    public Entry addEntry(Entry entry) {
+        if (entry.getShares().size() < 1) {
+            throw new BadOperationException("008",null);
+        }
+        Sheet sheet = sheetRepo.findOne(entry.getSheet().getId());
+        if (sheet == null) {
+            throw new NotFoundException("003",null);
+        } else {
+            tools.checkAdminPermission(sheet, entry.getSheet());
+            //entry.setDate(new Date());
+            tools.checkIntegrity(entry);
+            entry.setSheet(sheet);
+            entry=entryRepo.save(entry);
+            
+            for (Share sh : entry.getShares()) {
+                Member m = memberRepo.findOne(sh.getMember().getId());
+                if (m == null || m.getSheet().getId()!= sheet.getId()) {
+                    throw new BadOperationException("010",null);
+                }
+                shareRepo.save(new Share(m, entry, sh.getAmount()));
+            } 
+            return entry;
+        }
+    }
+    
 
 }

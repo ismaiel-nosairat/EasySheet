@@ -44,4 +44,10 @@ public class MemberController
         return memberServices.detailsMember(member);
     }
     
+    @PostMapping("/balance")
+    public ResponseEntity memberBalance(@RequestBody Member member)
+    {
+        return memberServices.memberBalance(member);
+    }
+    
 }
